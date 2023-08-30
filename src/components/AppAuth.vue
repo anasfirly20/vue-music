@@ -81,7 +81,7 @@
             </button>
           </form>
           <!-- Registration Form -->
-          <vee-form v-show="tab === 'register'" :validation-schema="schema">
+          <vee-form v-show="tab === 'register'" :validation-schema="schema" @submit="register">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -187,7 +187,7 @@ export default {
       schema: {
         name: 'required|min:3|max:100|alpha_spaces',
         email: 'required|min:3|max:100|email',
-        age: 'required|min_value:18|max_val:100',
+        age: 'required|min_value:18|max_value:100',
         password: 'required|min:3|max:100',
         confirm_password: 'confirmed:@password',
         country: 'required|excluded:Antarctica',
@@ -204,6 +204,9 @@ export default {
   methods: {
     closeModal() {
       this.modalVisibility = false
+    },
+    register(values) {
+      console.log('SUBMITEDD>', values)
     }
   }
 }
