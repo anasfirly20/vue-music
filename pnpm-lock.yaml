@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@vee-validate/rules':
+    specifier: ^4.11.3
+    version: 4.11.3(vue@3.3.4)
   pinia:
     specifier: ^2.1.6
     version: 2.1.6(vue@3.3.4)
@@ -541,6 +544,14 @@ packages:
       '@types/node': 16.18.46
     dev: true
     optional: true
+
+  /@vee-validate/rules@4.11.3(vue@3.3.4):
+    resolution: {integrity: sha512-MJmQgTXnt0lEOLfF2z+IE1dViu8dISaLa95axjd/rfjGYLQE9kI/eGQOZ0bojuYIVB7cD+K3xkRNdCPg9Bi7fg==}
+    dependencies:
+      vee-validate: 4.11.3(vue@3.3.4)
+    transitivePeerDependencies:
+      - vue
+    dev: false
 
   /@vitejs/plugin-vue@4.3.1(vite@4.4.9)(vue@3.3.4):
     resolution: {integrity: sha512-tUBEtWcF7wFtII7ayNiLNDTCE1X1afySEo+XNVMNkFXaThENyCowIEX095QqbJZGTgoOcSVDJGlnde2NG4jtbQ==}
