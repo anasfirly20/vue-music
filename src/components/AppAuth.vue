@@ -91,6 +91,7 @@
                 placeholder="Enter Name"
                 name="name"
               />
+              <ErrorMessage class="text-red-600" name="name" />
             </div>
             <!-- Email -->
             <div class="mb-3">
