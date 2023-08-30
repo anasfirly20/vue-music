@@ -21,7 +21,7 @@
             <p class="text-2xl font-bold">Your Account</p>
             <!-- Modal Close Button -->
             <div class="modal-close cursor-pointer z-50">
-              <i class="fas fa-times"></i>
+              <i class="fas fa-times" @click="closeModal"></i>
             </div>
           </div>
 
@@ -143,12 +143,18 @@
 
 <script>
 import useModalStore from '@/stores/modal'
-import { mapState } from 'pinia'
+import { mapState, mapWritableState } from 'pinia'
 
 export default {
   name: 'AppAuth',
   computed: {
-    ...mapState(useModalStore, ['hiddenClass'])
+    ...mapState(useModalStore, ['hiddenClass']),
+    ...mapWritableState(useModalStore, ['isOpen'])
+  },
+  methods: {
+    closeModal() {
+      this.isOpen = false
+    }
   }
 }
 </script>
