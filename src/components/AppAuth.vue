@@ -53,143 +53,8 @@
             </li>
           </ul>
 
-          <!-- Login Form -->
-          <vee-form v-show="tab === 'login'" :validation-schema="schema_login" @submit="login">
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Email</label>
-              <vee-field
-                type="email"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Email"
-                name="email"
-              />
-              <ErrorMessage class="text-red-600" name="email" />
-            </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Password</label>
-              <vee-field
-                type="password"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Password"
-                name="password"
-              />
-              <ErrorMessage class="text-red-600" name="password" />
-            </div>
-            <button
-              type="submit"
-              class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
-            >
-              Submit
-            </button>
-          </vee-form>
-
-          <!-- Registration Form -->
-          <vee-form
-            v-show="tab === 'register'"
-            :validation-schema="schema"
-            @submit="register"
-            :initial-values="userData"
-          >
-            <div
-              class="text-white text-center font-bold p-4 rounded mb-4"
-              v-if="reg_show_alert"
-              :class="reg_alert_variant"
-            >
-              {{ reg_alert_msg }}
-            </div>
-            <!-- Name -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Name</label>
-              <vee-field
-                type="text"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Name"
-                name="name"
-              />
-              <ErrorMessage class="text-red-600" name="name" />
-            </div>
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Email</label>
-              <vee-field
-                type="email"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Email"
-                name="email"
-              />
-              <ErrorMessage class="text-red-600" name="email" />
-            </div>
-            <!-- Age -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Age</label>
-              <vee-field
-                type="number"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                name="age"
-              />
-              <ErrorMessage class="text-red-600" name="age" />
-            </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Password</label>
-              <vee-field name="password" :bails="false" v-slot="{ field, errors }">
-                <input
-                  class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                  type="password"
-                  placeholder="Password"
-                  v-bind="field"
-                />
-                <div class="text-red-600" v-for="error in errors" :key="error">
-                  {{ error }}
-                </div>
-              </vee-field>
-            </div>
-            <!-- Confirm Password -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Confirm Password</label>
-              <vee-field
-                type="password"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Confirm Password"
-                name="confirm_password"
-              />
-              <ErrorMessage class="text-red-600" name="confirm_password" />
-            </div>
-            <!-- Country -->
-            <div class="mb-3">
-              <label class="inline-block mb-2">Country</label>
-              <vee-field
-                as="select"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                name="country"
-              >
-                <option v-for="country in country_list" :value="country" :key="country">
-                  {{ country }}
-                </option>
-              </vee-field>
-              <ErrorMessage class="text-red-600" name="country" />
-            </div>
-            <!-- TOS -->
-            <div class="mb-3 pl-6">
-              <vee-field
-                type="checkbox"
-                class="w-4 h-4 float-left -ml-6 mt-1 rounded"
-                name="tos"
-                value="1"
-              />
-              <label class="inline-block">Accept terms of service</label>
-            </div>
-            <ErrorMessage class="text-red-600" name="tos" />
-            <button
-              type="submit"
-              class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
-              :disabled="reg_in_submission"
-            >
-              Submit
-            </button>
-          </vee-form>
+          <app-login-form v-if="tab === 'login'" />
+          <app-register-form v-else />
         </div>
       </div>
     </div>
@@ -200,32 +65,14 @@
 import useModalStore from '@/stores/modal'
 import { mapState, mapWritableState } from 'pinia'
 
+import AppLoginForm from './LoginForm.vue'
+import AppRegisterForm from './RegisterForm.vue'
+
 export default {
   name: 'AppAuth',
   data() {
     return {
-      country_list: ['USA', 'Mexico', 'Germany', 'Antarctica'],
-      tab: 'login',
-      schema: {
-        name: 'required|min:3|max:100|alpha_spaces',
-        email: 'required|min:3|max:100|email',
-        age: 'required|min_value:18|max_value:100',
-        password: 'required|min:6|max:100|excluded:password',
-        confirm_password: 'required|password_mismatch:@password',
-        country: 'required|country_excluded:Antarctica',
-        tos: 'tos'
-      },
-      schema_login: {
-        email: 'required|email',
-        password: 'required|min:6|max:100'
-      },
-      userData: {
-        country: 'USA'
-      },
-      reg_in_submission: false,
-      reg_show_alert: false,
-      reg_alert_variant: 'bg-blue-500',
-      reg_alert_msg: 'Please wait! Your account is being created.'
+      tab: 'login'
     }
   },
   computed: {
@@ -237,21 +84,8 @@ export default {
   methods: {
     closeModal() {
       this.modalVisibility = false
-    },
-    register(values) {
-      this.reg_show_alert = true
-      this.reg_in_submission = true
-      this.reg_alert_variant = 'bg-blue-500'
-      this.reg_alert_msg = 'Please wait! Your account is being created.'
-      this.reg_alert_variant = 'bg-green-500'
-      this.reg_alert_msg = 'Success! Your account has been created.'
-      this.reg_in_submission = false
-      console.log('>>>', values)
-    },
-    login(values) {
-      console.log('LOGIN >', values)
-      window.alert('YOU HAVE BEEN LOGGED IN!' + values.email)
     }
-  }
+  },
+  components: { AppLoginForm, AppRegisterForm }
 }
 </script>
