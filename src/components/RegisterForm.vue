@@ -40,6 +40,19 @@
       />
       <ErrorMessage class="text-red-600" name="age" />
     </div>
+    <!-- Role -->
+    <div class="mb-3">
+      <label class="inline-block mb-2">Role</label>
+      <vee-field
+        as="select"
+        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+        name="role"
+      >
+        <option v-for="role in role_list" :value="role" :key="role">
+          {{ role }}
+        </option>
+      </vee-field>
+    </div>
     <!-- Password -->
     <div class="mb-3">
       <label class="inline-block mb-2">Password</label>
@@ -111,6 +124,7 @@ export default {
   data() {
     return {
       country_list: ['USA', 'Mexico', 'Germany', 'Antarctica'],
+      role_list: ['Listener', 'Artist'],
       schema: {
         name: 'required|min:3|max:100|alpha_spaces',
         email: 'required|min:3|max:100|email',
@@ -121,7 +135,8 @@ export default {
         tos: 'tos'
       },
       userData: {
-        country: 'USA'
+        country: 'USA',
+        role: 'Listener'
       },
       reg_in_submission: false,
       reg_show_alert: false,
@@ -150,8 +165,9 @@ export default {
       try {
         addDoc(collection(db, 'users'), {
           name: values.name,
-          email: values.name,
+          email: values.email,
           age: values.age,
+          role: values.role,
           country: values.country
         })
       } catch (error) {
