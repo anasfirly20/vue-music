@@ -7,7 +7,7 @@
       class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
       :name="name"
     >
-      <option v-for="mappedData in data_to_map" :value="value" :key="mappedData">
+      <option v-for="mappedData in data_to_map" :value="mappedData" :key="mappedData">
         {{ mappedData }}
       </option>
     </vee-field>

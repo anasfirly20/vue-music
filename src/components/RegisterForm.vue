@@ -16,18 +16,8 @@
     <CustomInput :label="'Age'" :name="'age'" :placeholder="'Enter Age'" :type="'number'" />
 
     <!-- Role -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Role</label>
-      <vee-field
-        as="select"
-        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-        name="role"
-      >
-        <option v-for="role in role_list" :value="role" :key="role">
-          {{ role }}
-        </option>
-      </vee-field>
-    </div>
+    <CustomInput :label="'Role'" :name="'role'" :type="'select'" :data_to_map="role_list" />
+
     <!-- Password -->
     <div class="mb-3">
       <label class="inline-block mb-2">Password</label>
@@ -51,19 +41,13 @@
       :type="'password'"
     />
     <!-- Country -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Country</label>
-      <vee-field
-        as="select"
-        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-        name="country"
-      >
-        <option v-for="country in country_list" :value="country" :key="country">
-          {{ country }}
-        </option>
-      </vee-field>
-      <ErrorMessage class="text-red-600" name="country" />
-    </div>
+    <CustomInput
+      :label="'Country'"
+      :name="'country'"
+      :type="'select'"
+      :data_to_map="country_list"
+    />
+
     <!-- TOS -->
     <div class="mb-3 pl-6">
       <vee-field
@@ -110,7 +94,7 @@ export default {
       },
       userData: {
         country: 'USA',
-        role: 'Listener'
+        role: 'Artist'
       },
       reg_in_submission: false,
       reg_show_alert: false,
