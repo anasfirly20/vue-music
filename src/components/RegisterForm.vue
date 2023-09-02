@@ -9,37 +9,12 @@
       {{ reg_alert_msg }}
     </div>
     <!-- Name -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Name</label>
-      <vee-field
-        type="text"
-        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-        placeholder="Enter Name"
-        name="name"
-      />
-      <ErrorMessage class="text-red-600" name="name" />
-    </div>
+    <CustomInput :label="'Name'" :name="'name'" :placeholder="'Enter Name'" :type="'text'" />
     <!-- Email -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Email</label>
-      <vee-field
-        type="email"
-        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-        placeholder="Enter Email"
-        name="email"
-      />
-      <ErrorMessage class="text-red-600" name="email" />
-    </div>
+    <CustomInput :label="'Email'" :name="'email'" :placeholder="'Enter Email'" :type="'email'" />
     <!-- Age -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Age</label>
-      <vee-field
-        type="number"
-        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-        name="age"
-      />
-      <ErrorMessage class="text-red-600" name="age" />
-    </div>
+    <CustomInput :label="'Age'" :name="'age'" :placeholder="'Enter Age'" :type="'number'" />
+
     <!-- Role -->
     <div class="mb-3">
       <label class="inline-block mb-2">Role</label>
@@ -69,16 +44,12 @@
       </vee-field>
     </div>
     <!-- Confirm Password -->
-    <div class="mb-3">
-      <label class="inline-block mb-2">Confirm Password</label>
-      <vee-field
-        type="password"
-        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-        placeholder="Confirm Password"
-        name="confirm_password"
-      />
-      <ErrorMessage class="text-red-600" name="confirm_password" />
-    </div>
+    <CustomInput
+      :label="'Confirm Password'"
+      :name="'confirm_password'"
+      :placeholder="'Confirm Password'"
+      :type="'password'"
+    />
     <!-- Country -->
     <div class="mb-3">
       <label class="inline-block mb-2">Country</label>
@@ -119,6 +90,9 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth, db } from '@/includes/firebase'
 import { collection, addDoc } from 'firebase/firestore'
 
+// Comps
+import CustomInput from './CustomInput.vue'
+
 export default {
   name: 'RegisterForm',
   data() {
@@ -130,7 +104,7 @@ export default {
         email: 'required|min:3|max:100|email',
         age: 'required|min_value:18|max_value:100',
         password: 'required|min:6|max:100|excluded:password',
-        confirm_password: 'required|password_mismatch:@password',
+        confirm_password: 'password_mismatch:@password',
         country: 'required|country_excluded:Antarctica',
         tos: 'tos'
       },
@@ -150,7 +124,6 @@ export default {
       this.reg_in_submission = true
       this.reg_alert_variant = 'bg-blue-500'
       this.reg_alert_msg = 'Please wait! Your account is being created.'
-
       let userCred = null
       try {
         userCred = await createUserWithEmailAndPassword(auth, values.email, values.password)
@@ -161,7 +134,6 @@ export default {
         console.log('ERROR HERE >>', error)
         return
       }
-
       try {
         addDoc(collection(db, 'users'), {
           name: values.name,
@@ -177,12 +149,12 @@ export default {
         console.log('ERROR DB >>', error)
         return
       }
-
       this.reg_alert_variant = 'bg-green-500'
       this.reg_alert_msg = 'Success! Your account has been created.'
       this.reg_in_submission = false
       console.log('>>>', userCred)
     }
-  }
+  },
+  components: { CustomInput }
 }
 </script>
