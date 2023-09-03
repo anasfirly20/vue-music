@@ -19,7 +19,7 @@
               <a class="px-2 text-white" href="#">Manage</a>
             </li>
             <li>
-              <a class="px-2 text-white" href="#" @click.prevent="handleLogout">Logout</a>
+              <a class="px-2 text-white" href="#" @click.prevent="userStore.logout">Logout</a>
             </li>
           </template>
         </ul>
@@ -42,10 +42,7 @@ export default {
     toggleAuthModal() {
       this.modalStore.isOpen = !this.modalStore.isOpen
     },
-    ...mapActions(useUserStore, ['logout']),
-    async handleLogout() {
-      await this.logout()
-    }
+    ...mapActions(useUserStore, ['logout'])
   }
 }
 </script>

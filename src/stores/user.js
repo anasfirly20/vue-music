@@ -36,7 +36,6 @@ export default defineStore('user', {
       this.useLoggedIn = true
     },
     async logout() {
-      console.log('TRIGG')
       try {
         await signOut(auth)
         this.userLoggedIn = false
