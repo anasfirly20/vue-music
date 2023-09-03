@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 // firebase
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth, db } from '@/includes/firebase'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, setDoc, doc, addDoc } from 'firebase/firestore'
 
 export default defineStore('user', {
   state: () => ({
@@ -11,8 +11,8 @@ export default defineStore('user', {
   }),
   actions: {
     async register(values) {
-      await createUserWithEmailAndPassword(auth, values.email, values.password)
-      await addDoc(collection(db, 'users'), {
+      const userCred = await createUserWithEmailAndPassword(auth, values.email, values.password)
+      await setDoc(doc(db, 'users', userCred.user.uid), {
         name: values.name,
         email: values.email,
         age: values.age,
@@ -20,7 +20,13 @@ export default defineStore('user', {
         country: values.country
       })
 
+      // await userCred.user.updateProfile({
+      //   displayName: values.name
+      // })
+
       this.useLoggedIn = true
+
+      console.log('user ID>>', userCred.user.uid)
     }
   }
 })
