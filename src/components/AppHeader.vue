@@ -19,7 +19,7 @@
               <a class="px-2 text-white" href="#">Manage</a>
             </li>
             <li>
-              <a class="px-2 text-white" href="#" @click.prevent="logout">Logout</a>
+              <a class="px-2 text-white" href="#" @click.prevent="handleLogout">Logout</a>
             </li>
           </template>
         </ul>
@@ -29,11 +29,9 @@
 </template>
 
 <script>
-import { mapStores } from 'pinia'
+import { mapStores, mapActions } from 'pinia'
 import useModalStore from '@/stores/modal'
 import useUserStore from '@/stores/user'
-import { signOut } from 'firebase/auth'
-import { auth } from '../includes/firebase'
 
 export default {
   name: 'AppHeader',
@@ -44,13 +42,9 @@ export default {
     toggleAuthModal() {
       this.modalStore.isOpen = !this.modalStore.isOpen
     },
-    async logout() {
-      try {
-        await signOut(auth)
-        window.location.reload()
-      } catch (error) {
-        console.log('ERROR', error)
-      }
+    ...mapActions(useUserStore, ['logout']),
+    async handleLogout() {
+      await this.logout()
     }
   }
 }

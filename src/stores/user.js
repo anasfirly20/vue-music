@@ -4,7 +4,8 @@ import { defineStore } from 'pinia'
 import {
   createUserWithEmailAndPassword,
   updateProfile,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  signOut
 } from 'firebase/auth'
 import { auth, db } from '@/includes/firebase'
 import { setDoc, doc } from 'firebase/firestore'
@@ -33,6 +34,16 @@ export default defineStore('user', {
     async authenticate(values) {
       await signInWithEmailAndPassword(auth, values.email, values.password)
       this.useLoggedIn = true
+    },
+    async logout() {
+      console.log('TRIGG')
+      try {
+        await signOut(auth)
+        this.userLoggedIn = false
+        window.location.reload()
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 })
