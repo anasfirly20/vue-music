@@ -12,7 +12,7 @@ import { setDoc, doc } from 'firebase/firestore'
 
 export default defineStore('user', {
   state: () => ({
-    useLoggedIn: false
+    userLoggedIn: false
   }),
   actions: {
     async register(values) {
@@ -29,17 +29,16 @@ export default defineStore('user', {
           displayName: values.name
         })
       }
-      this.useLoggedIn = true
+      this.userLoggedIn = true
     },
     async authenticate(values) {
       await signInWithEmailAndPassword(auth, values.email, values.password)
-      this.useLoggedIn = true
+      this.userLoggedIn = true
     },
     async logout() {
       try {
         await signOut(auth)
         this.userLoggedIn = false
-        window.location.reload()
       } catch (error) {
         console.log(error)
       }
