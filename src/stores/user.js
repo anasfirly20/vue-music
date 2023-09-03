@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 // firebase
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth, db } from '@/includes/firebase'
-import { collection, setDoc, doc, addDoc } from 'firebase/firestore'
+import { setDoc, doc } from 'firebase/firestore'
 
 export default defineStore('user', {
   state: () => ({
@@ -20,9 +20,9 @@ export default defineStore('user', {
         country: values.country
       })
 
-      // await userCred.user.updateProfile({
-      //   displayName: values.name
-      // })
+      await userCred.user.updateProfile({
+        displayName: values.name
+      })
 
       this.useLoggedIn = true
 
