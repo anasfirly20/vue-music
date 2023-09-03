@@ -14,7 +14,6 @@
     <CustomInput :label="'Email'" :name="'email'" :placeholder="'Enter Email'" :type="'email'" />
     <!-- Age -->
     <CustomInput :label="'Age'" :name="'age'" :placeholder="'Enter Age'" :type="'number'" />
-
     <!-- Role -->
     <CustomInput :label="'Role'" :name="'role'" :type="'select'" :data_to_map="role_list" />
 

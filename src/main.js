@@ -15,7 +15,7 @@ import './assets/base.css'
 import './assets/main.css'
 
 let app
-auth.onAuthStateChanged(() => {
+onAuthStateChanged(auth, () => {
   if (!app) {
     app = createApp(App)
 
