@@ -23,9 +23,16 @@
       <!-- Progess Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
         <!-- File Name -->
-        <div class="font-bold text-sm" :class="upload.text_class">
+        <div class="font-bold text-sm space-x-2" :class="upload.text_class">
           <i :class="upload.icon"></i>
-          {{ upload.name }}
+          <a
+            v-if="upload.download_url"
+            :href="upload.download_url"
+            target="_blank"
+            rel="noopener noreferrer"
+            >{{ upload.name }}</a
+          >
+          <span v-else>{{ upload.name }}</span>
         </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <!-- Inner Progress Bar -->
@@ -58,7 +65,7 @@ export default {
 
       const files = [...$event.dataTransfer.files]
 
-      files.forEach(async (file) => {
+      files.forEach((file) => {
         if (file.type !== 'audio/mpeg') {
           return
         }
@@ -73,9 +80,9 @@ export default {
             name: file.name,
             variant: 'bg-blue-400',
             icon: 'fas fa-spinner fa-spin',
-            text_class: ''
+            text_class: '',
+            download_url: ''
           }) - 1
-        console.log('uploadIndex >>', uploadIndex)
 
         task.on(
           'state_changed',
@@ -94,6 +101,7 @@ export default {
             this.uploads[uploadIndex].icon = 'fas fa-check'
             this.uploads[uploadIndex].text_class = 'text-green-400'
             getDownloadURL(task.snapshot.ref).then((downloadURL) => {
+              this.uploads[uploadIndex].download_url = downloadURL
               console.log('File available at', downloadURL)
             })
           }
