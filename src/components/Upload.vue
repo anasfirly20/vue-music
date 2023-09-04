@@ -50,7 +50,7 @@
 
 <script>
 import { storage, auth, db } from '@/includes/firebase'
-import { addDoc, collection } from 'firebase/firestore'
+import { addDoc, collection, getDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 
 export default {
@@ -59,6 +59,12 @@ export default {
     return {
       is_dragover: false,
       uploads: []
+    }
+  },
+  props: {
+    addSong: {
+      type: Function,
+      required: true
     }
   },
   methods: {
@@ -113,7 +119,9 @@ export default {
 
               song.url = downloadURL
             })
-            await addDoc(collection(db, 'songs'), song)
+            const songRef = await addDoc(collection(db, 'songs'), song)
+            const songSnapRef = await getDoc(songRef)
+            this.addSong(songSnapRef)
           }
         )
       })

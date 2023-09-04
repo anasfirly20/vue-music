@@ -124,7 +124,6 @@ export default {
     async deleteSong() {
       await deleteDoc(doc(db, 'songs', this.song.docID))
       this.removeSong(this.index)
-      console.log('DELTED')
     }
   }
 }
