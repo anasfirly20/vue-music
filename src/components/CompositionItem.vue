@@ -31,8 +31,15 @@
         :name="'modified_name'"
         :type="'text'"
         placeholder="Enter Song Title"
+        @input="updateUnSavedFlag(true)"
       />
-      <CustomInput :label="'Genre'" :name="'genre'" :type="'text'" placeholder="Enter Genre" />
+      <CustomInput
+        :label="'Genre'"
+        :name="'genre'"
+        :type="'text'"
+        placeholder="Enter Genre"
+        @input="updateUnSavedFlag(true)"
+      />
       <button
         type="submit"
         class="py-1.5 px-3 rounded text-white bg-green-600"
@@ -89,6 +96,9 @@ export default {
     removeSong: {
       type: Function,
       required: true
+    },
+    updateUnSavedFlag: {
+      type: Function
     }
   },
   methods: {
@@ -115,6 +125,7 @@ export default {
         this.alert_message = 'Something went wrong, ty again later.'
         return
       }
+      this.updateUnSavedFlag(false)
       // Used to update the UI
       this.updateSong(this.index, values)
       this.in_submission = false

@@ -19,6 +19,7 @@
               :updateSong="updateSong"
               :index="i"
               :removeSong="removeSong"
+              :updateUnSavedFlag="updateUnSavedFlag"
             />
           </div>
         </div>
@@ -40,7 +41,8 @@ export default {
   components: { AppUpload, CompositionItem },
   data() {
     return {
-      songs: []
+      songs: [],
+      unsavedFlag: false
     }
   },
   async created() {
@@ -63,11 +65,22 @@ export default {
         docID: document.id
       }
       this.songs.push(song)
+    },
+    updateUnSavedFlag(value) {
+      this.unsavedFlag = value
     }
-  }
+  },
   // beforeRouteLeave(to, from, next) {
   //   this.$refs.upload.cancelUploads()
   //   next()
   // }
+  beforeRouteLeave(to, from, next) {
+    if (!this.unsavedFlag) {
+      next()
+    } else {
+      const leave = confirm('You have unsaved changes. Are you sure you want to leave?')
+      next(leave)
+    }
+  }
 }
 </script>
