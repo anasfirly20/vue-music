@@ -117,12 +117,19 @@ export default {
           }
         )
       })
+    },
+    cancelUploads() {
+      this.uploads.forEach((upload) => {
+        upload.task.cancel()
+        console.log('trigger parent')
+      })
     }
-  },
-  beforeUnmount() {
-    this.uploads.forEach((upload) => {
-      upload.task.cancel()
-    })
   }
+  // beforeUnmount() {
+  //   console.log('TRIGGER beforeUnmount')
+  //   this.uploads.forEach((upload) => {
+  //     upload.task.cancel()
+  //   })
+  // }
 }
 </script>
