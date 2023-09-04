@@ -41,7 +41,7 @@
 
 <script>
 import { storage } from '@/includes/firebase'
-import { ref, uploadBytesResumable } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 
 export default {
   name: 'Upload',
@@ -64,19 +64,29 @@ export default {
 
         const storageRef = ref(storage, `songs/${file.name}`)
         const uploadTask = uploadBytesResumable(storageRef, file)
-        const task = await uploadTask
 
         const uploadIndex =
           this.uploads.push({
-            task,
+            task: uploadTask,
             current_progress: 0,
             name: file.name
           }) - 1
 
-        const bytesTransferred = task.bytesTransferred
-        const totalBytes = task.totalBytes
-        const progress = (bytesTransferred / totalBytes) * 100
-        this.uploads[uploadIndex].current_progress = progress
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            this.uploads[uploadIndex].current_progress = progress
+          },
+          (error) => {
+            console.log('ERROR>>', error)
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log('File available at', downloadURL)
+            })
+          }
+        )
       })
     }
   }
