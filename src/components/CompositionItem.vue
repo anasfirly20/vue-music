@@ -100,10 +100,7 @@ export default {
 
       const songRef = doc(db, 'songs', this.song.docID)
       try {
-        await updateDoc(songRef, {
-          modified_name: values.modified_name,
-          genre: values.genre
-        })
+        await updateDoc(songRef, values)
       } catch (error) {
         console.log(error)
         this.in_submission = false
