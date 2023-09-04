@@ -48,7 +48,8 @@
 </template>
 
 <script>
-import { storage } from '@/includes/firebase'
+import { storage, auth, db } from '@/includes/firebase'
+import { addDoc, collection } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 
 export default {
@@ -87,6 +88,9 @@ export default {
         task.on(
           'state_changed',
           (snapshot) => {
+            console.log('snapshot >>', snapshot)
+            console.log('task snapshot name >>', task.snapshot.ref.name)
+
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             this.uploads[uploadIndex].current_progress = progress
           },
@@ -96,14 +100,28 @@ export default {
             this.uploads[uploadIndex].text_class = 'text-red-400'
             console.log('ERROR>>', error)
           },
-          () => {
+          async () => {
+            const song = {
+              uid: auth.currentUser.uid,
+              display_name: auth.currentUser.displayName,
+              original_name: task.snapshot.ref.name,
+              modified_name: task.snapshot.ref.name,
+              genre: '',
+              comment_count: 0
+            }
+            console.log('song data>>', song)
+
             this.uploads[uploadIndex].variant = 'bg-green-400'
             this.uploads[uploadIndex].icon = 'fas fa-check'
             this.uploads[uploadIndex].text_class = 'text-green-400'
             getDownloadURL(task.snapshot.ref).then((downloadURL) => {
               this.uploads[uploadIndex].download_url = downloadURL
               console.log('File available at', downloadURL)
+
+              song.url = downloadURL
             })
+            const checkDoc = await addDoc(collection(db, 'songs'), song)
+            console.log('checkDoc>>', checkDoc)
           }
         )
       })
