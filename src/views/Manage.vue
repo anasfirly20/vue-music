@@ -64,10 +64,10 @@ export default {
       }
       this.songs.push(song)
     }
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$refs.upload.cancelUploads()
-    next()
   }
+  // beforeRouteLeave(to, from, next) {
+  //   this.$refs.upload.cancelUploads()
+  //   next()
+  // }
 }
 </script>

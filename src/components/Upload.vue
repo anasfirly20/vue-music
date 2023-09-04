@@ -116,7 +116,6 @@ export default {
             getDownloadURL(task.snapshot.ref).then((downloadURL) => {
               this.uploads[uploadIndex].download_url = downloadURL
               console.log('File available at', downloadURL)
-
               song.url = downloadURL
             })
             const songRef = await addDoc(collection(db, 'songs'), song)
@@ -125,13 +124,18 @@ export default {
           }
         )
       })
-    },
-    cancelUploads() {
-      this.uploads.forEach((upload) => {
-        upload.task.cancel()
-        console.log('trigger parent')
-      })
     }
+    // cancelUploads() {
+    //   this.uploads.forEach((upload) => {
+    //     upload.task.cancel()
+    //     console.log('trigger parent')
+    //   })
+    // }
+  },
+  beforeUnmount() {
+    this.uploads.forEach((upload) => {
+      upload.task.cancel()
+    })
   }
 }
 </script>
