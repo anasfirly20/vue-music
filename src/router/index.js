@@ -34,7 +34,6 @@ router.beforeEach((to, from, next) => {
   }
 
   const store = useUserStore()
-
   if (store.userLoggedIn) {
     next()
   } else {
