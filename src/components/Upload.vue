@@ -125,11 +125,5 @@ export default {
       })
     }
   }
-  // beforeUnmount() {
-  //   console.log('TRIGGER beforeUnmount')
-  //   this.uploads.forEach((upload) => {
-  //     upload.task.cancel()
-  //   })
-  // }
 }
 </script>

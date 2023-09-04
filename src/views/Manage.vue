@@ -60,39 +60,6 @@
                 </button>
               </div>
             </div>
-            <div class="border border-gray-200 p-3 mb-4 rounded">
-              <div>
-                <h4 class="inline-block text-2xl font-bold">Song Name</h4>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right">
-                  <i class="fa fa-times"></i>
-                </button>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right">
-                  <i class="fa fa-pencil-alt"></i>
-                </button>
-              </div>
-            </div>
-            <div class="border border-gray-200 p-3 mb-4 rounded">
-              <div>
-                <h4 class="inline-block text-2xl font-bold">Song Name</h4>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right">
-                  <i class="fa fa-times"></i>
-                </button>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right">
-                  <i class="fa fa-pencil-alt"></i>
-                </button>
-              </div>
-            </div>
-            <div class="border border-gray-200 p-3 mb-4 rounded">
-              <div>
-                <h4 class="inline-block text-2xl font-bold">Song Name</h4>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right">
-                  <i class="fa fa-times"></i>
-                </button>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right">
-                  <i class="fa fa-pencil-alt"></i>
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -102,9 +69,20 @@
 
 <script>
 import AppUpload from '@/components/Upload.vue'
+import { auth, db } from '@/includes/firebase'
+import { query, where, collection, getDocs } from 'firebase/firestore'
 
 export default {
   name: 'AppManage',
+  async created() {
+    const songsRef = collection(db, 'songs')
+    const songsQueried = query(songsRef, where('uid', '==', auth.currentUser.uid))
+
+    const querySnapshot = await getDocs(songsQueried)
+    querySnapshot.forEach((song) => {
+      console.log('>>>>>', song.data().original_name)
+    })
+  },
   components: { AppUpload },
   beforeRouteLeave(to, from, next) {
     this.$refs.upload.cancelUploads()
