@@ -21,24 +21,18 @@
       </div>
       <hr class="my-6" />
       <!-- Progess Bars -->
-      <div class="mb-4">
+      <div class="mb-4" v-for="upload in uploads" :key="upload.name">
         <!-- File Name -->
-        <div class="font-bold text-sm">Just another song.mp3</div>
+        <div class="font-bold text-sm">
+          {{ upload.name }}
+        </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <!-- Inner Progress Bar -->
-          <div class="transition-all progress-bar bg-blue-400" style="width: 75%"></div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div class="transition-all progress-bar bg-blue-400" style="width: 35%"></div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div class="transition-all progress-bar bg-blue-400" style="width: 55%"></div>
+          <div
+            class="transition-all progress-bar bg-blue-400"
+            :class="'bg-blue-400'"
+            :style="{ width: upload.current_progress + '%' }"
+          ></div>
         </div>
       </div>
     </div>
@@ -47,13 +41,14 @@
 
 <script>
 import { storage } from '@/includes/firebase'
-import { ref, uploadBytes } from 'firebase/storage'
+import { ref, uploadBytesResumable } from 'firebase/storage'
 
 export default {
   name: 'Upload',
   data() {
     return {
-      is_dragover: false
+      is_dragover: false,
+      uploads: []
     }
   },
   methods: {
@@ -62,15 +57,27 @@ export default {
 
       const files = [...$event.dataTransfer.files]
 
-      files.forEach((file) => {
+      files.forEach(async (file) => {
         if (file.type !== 'audio/mpeg') {
           return
         }
 
         const songsRef = ref(storage, `songs/${file.name}`)
-        uploadBytes(songsRef, file).then((snapshot) => {
-          console.log('snap>>', snapshot)
-        })
+        const uploadTask = uploadBytesResumable(songsRef, file)
+        const task = await uploadTask
+
+        const uploadIndex =
+          this.uploads.push({
+            task,
+            current_progress: 0,
+            name: file.name
+          }) - 1
+
+        const bytesTransferred = task.bytesTransferred
+        const totalBytes = task.totalBytes
+
+        const progress = (bytesTransferred / totalBytes) * 100
+        this.uploads[uploadIndex].current_progress = progress
       })
     }
   }
