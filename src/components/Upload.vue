@@ -75,18 +75,24 @@ export default {
             icon: 'fas fa-spinner fa-spin',
             text_class: ''
           }) - 1
+        console.log('uploadIndex >>', uploadIndex)
 
         task.on(
           'state_changed',
           (snapshot) => {
-            console.log('snapshot>>', snapshot)
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             this.uploads[uploadIndex].current_progress = progress
           },
           (error) => {
+            this.uploads[uploadIndex].variant = 'bg-red-400'
+            this.uploads[uploadIndex].icon = 'fas fa-times'
+            this.uploads[uploadIndex].text_class = 'text-red-400'
             console.log('ERROR>>', error)
           },
           () => {
+            this.uploads[uploadIndex].variant = 'bg-green-400'
+            this.uploads[uploadIndex].icon = 'fas fa-check'
+            this.uploads[uploadIndex].text_class = 'text-green-400'
             getDownloadURL(task.snapshot.ref).then((downloadURL) => {
               console.log('File available at', downloadURL)
             })
