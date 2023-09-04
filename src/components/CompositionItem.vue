@@ -8,14 +8,17 @@
         >
       </h4>
       <div class="flex gap-1 absolute right-2 top-6">
-        <button class="py-1 px-2 text-sm rounded text-white bg-red-600 float-right">
-          <i class="fa fa-times"></i>
-        </button>
         <button
           class="py-1 px-2 text-sm rounded text-white bg-blue-600 float-right"
           @click.prevent="showForm"
         >
           <i class="fa fa-pencil-alt"></i>
+        </button>
+        <button
+          class="py-1 px-2 text-sm rounded text-white bg-red-600 float-right"
+          @click.prevent="deleteSong"
+        >
+          <i class="fa fa-times"></i>
         </button>
       </div>
     </div>
@@ -52,7 +55,7 @@
 <script>
 import CustomInput from '@/components/CustomInput.vue'
 import { db } from '@/includes/firebase'
-import { doc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 export default {
   name: 'CompositionItem',
@@ -82,6 +85,10 @@ export default {
     index: {
       type: Number,
       required: true
+    },
+    removeSong: {
+      type: Function,
+      required: true
     }
   },
   methods: {
@@ -108,12 +115,16 @@ export default {
         this.alert_message = 'Something went wrong, ty again later.'
         return
       }
-
+      // Used to update the UI
       this.updateSong(this.index, values)
-
       this.in_submission = false
       this.alert_variant = 'bg-green-500'
       this.alert_message = 'Song info successfully updated.'
+    },
+    async deleteSong() {
+      await deleteDoc(doc(db, 'songs', this.song.docID))
+      this.removeSong(this.index)
+      console.log('DELTED')
     }
   }
 }
