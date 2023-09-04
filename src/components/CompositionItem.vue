@@ -12,43 +12,39 @@
         <i class="fa fa-pencil-alt"></i>
       </button>
     </div>
-    <div>
-      <form v-show="isShowForm">
-        <div class="mb-3">
-          <label class="inline-block mb-2">Song Title</label>
-          <input
-            type="text"
-            class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-            placeholder="Enter Song Title"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="inline-block mb-2">Genre</label>
-          <input
-            type="text"
-            class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-            placeholder="Enter Genre"
-          />
-        </div>
-        <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">Submit</button>
-        <button
-          type="button"
-          class="py-1.5 px-3 rounded text-white bg-gray-600"
-          @click.prevent="hideForm"
-        >
-          Go Back
-        </button>
-      </form>
-    </div>
+    <vee-form :validation-schema="schema" v-show="isShowForm" :initial-values="song" @submit="edit">
+      <CustomInput
+        :label="'Song Title'"
+        :name="'modified_name'"
+        :type="'text'"
+        placeholder="Enter Song Title"
+      />
+      <CustomInput :label="'Genre'" :name="'genre'" :type="'text'" placeholder="Enter Genre" />
+      <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">Submit</button>
+      <button
+        type="button"
+        class="py-1.5 px-3 rounded text-white bg-gray-600 ml-1"
+        @click.prevent="hideForm"
+      >
+        Go Back
+      </button>
+    </vee-form>
   </div>
 </template>
 
 <script>
+import CustomInput from '@/components/CustomInput.vue'
+
 export default {
   name: 'CompositionItem',
+  components: { CustomInput },
   data() {
     return {
-      isShowForm: false
+      isShowForm: false,
+      schema: {
+        modified_name: 'required',
+        genre: 'alpha_spaces'
+      }
     }
   },
   props: {
@@ -63,6 +59,9 @@ export default {
     },
     showForm() {
       this.isShowForm = true
+    },
+    edit(values) {
+      console.log('Song edited', values)
     }
   }
 }
