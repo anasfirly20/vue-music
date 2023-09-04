@@ -62,8 +62,8 @@ export default {
           return
         }
 
-        const songsRef = ref(storage, `songs/${file.name}`)
-        const uploadTask = uploadBytesResumable(songsRef, file)
+        const storageRef = ref(storage, `songs/${file.name}`)
+        const uploadTask = uploadBytesResumable(storageRef, file)
         const task = await uploadTask
 
         const uploadIndex =
@@ -75,7 +75,6 @@ export default {
 
         const bytesTransferred = task.bytesTransferred
         const totalBytes = task.totalBytes
-
         const progress = (bytesTransferred / totalBytes) * 100
         this.uploads[uploadIndex].current_progress = progress
       })
