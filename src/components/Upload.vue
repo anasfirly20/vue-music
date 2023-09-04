@@ -63,18 +63,19 @@ export default {
         }
 
         const storageRef = ref(storage, `songs/${file.name}`)
-        const uploadTask = uploadBytesResumable(storageRef, file)
+        const task = uploadBytesResumable(storageRef, file)
 
         const uploadIndex =
           this.uploads.push({
-            task: uploadTask,
+            task,
             current_progress: 0,
             name: file.name
           }) - 1
 
-        uploadTask.on(
+        task.on(
           'state_changed',
           (snapshot) => {
+            console.log('snapshot>>', snapshot)
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             this.uploads[uploadIndex].current_progress = progress
           },
@@ -82,7 +83,7 @@ export default {
             console.log('ERROR>>', error)
           },
           () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            getDownloadURL(task.snapshot.ref).then((downloadURL) => {
               console.log('File available at', downloadURL)
             })
           }
