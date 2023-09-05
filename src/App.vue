@@ -1,7 +1,7 @@
 <template>
   <app-header />
 
-  <router-view></router-view>
+  <router-view />
 
   <app-player />
 

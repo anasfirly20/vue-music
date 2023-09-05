@@ -12,7 +12,7 @@
         class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none"
         @click.prevent="this.newSong(song)"
       >
-        <i class="fas fa-play"></i>
+        <i class="fas" :class="{ 'fa-play': !playing, 'fa-pause': playing }"></i>
       </button>
       <div class="z-50 text-left ml-8">
         <!-- Song Info -->
@@ -121,6 +121,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(usePlayerStore, ['playing']),
     ...mapState(useUserStore, ['userLoggedIn']),
     sortedComments() {
       return this.comments.slice().sort((a, b) => {
