@@ -66,23 +66,26 @@
   </section>
   <!-- Comments -->
   <ul class="container mx-auto">
-    <li class="p-6 bg-gray-50 border border-gray-200">
+    <li
+      class="p-6 bg-gray-50 border border-gray-200"
+      v-for="comment in comments"
+      :key="comment.docID"
+    >
       <!-- Comment Author -->
       <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
+        <div class="font-bold">{{ comment.name }}</div>
+        <time>{{ comment.datePosted }}</time>
       </div>
 
       <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
+        {{ comment.content }}
       </p>
     </li>
   </ul>
 </template>
 
 <script>
-import { doc, getDoc, collection, addDoc } from 'firebase/firestore'
+import { doc, getDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore'
 import { db, auth } from '@/includes/firebase'
 import { mapState } from 'pinia'
 import useUserStore from '@/stores/user'
@@ -92,6 +95,7 @@ export default {
   data() {
     return {
       song: {},
+      comments: [],
       schema: {
         comment: 'required|min:3'
       },
@@ -129,16 +133,34 @@ export default {
         this.alert_variant = 'bg-red-500'
         this.alert_message = 'Something went wrong, ty again later.'
       }
+    },
+    async getComments() {
+      // Comments
+      const queryComments = query(
+        collection(db, 'comments'),
+        where('sid', '==', this.$route.params.id)
+      )
+      const commentsSnap = await getDocs(queryComments)
+
+      this.comments = []
+
+      commentsSnap.forEach((doc) => {
+        this.comments.push({
+          ...doc.data(),
+          docID: doc.id
+        })
+      })
     }
   },
   async created() {
-    const docRef = doc(db, 'songs', this.$route.params.id)
-    const docSnap = await getDoc(docRef)
+    const songRef = doc(db, 'songs', this.$route.params.id)
+    const docSnap = await getDoc(songRef)
     if (!docSnap.exists()) {
       this.$router.push({ name: 'home' })
       return
     }
     this.song = docSnap.data()
+    await this.getComments()
   }
 }
 </script>
