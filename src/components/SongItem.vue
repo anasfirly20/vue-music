@@ -3,7 +3,11 @@
     class="flex justify-between items-center p-3 pl-6 cursor-pointer transition duration-300 hover:bg-gray-50"
   >
     <div class="flex flex-col">
-      <a href="#" class="font-bold block text-gray-600">{{ song.modified_name }}</a>
+      <router-link
+        class="font-bold block text-gray-600"
+        :to="{ name: 'song', params: { id: song.docID } }"
+        >{{ song.modified_name }}</router-link
+      >
       <span class="text-gray-500 text-sm">{{ song.display_name }}</span>
       <small class="text-sm" v-if="song.genre"
         >Genre: <span class="text-slate-500">{{ song.genre }}</span></small
