@@ -4,7 +4,7 @@
   >
     <div class="flex flex-col">
       <a href="#" class="font-bold block text-gray-600">{{ song.modified_name }}</a>
-      <span class="text-gray-500 text-sm">Artist Name</span>
+      <span class="text-gray-500 text-sm">{{ song.display_name }}</span>
       <small class="text-sm" v-if="song.genre"
         >Genre: <span class="text-slate-500">{{ song.genre }}</span></small
       >
@@ -13,7 +13,7 @@
     <div class="text-gray-600 text-lg">
       <span class="comments">
         <i class="fa fa-comments text-gray-600"></i>
-        15
+        {{ song.comment_count }}
       </span>
     </div>
   </li>

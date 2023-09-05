@@ -58,6 +58,7 @@ export default {
     const songRef = collection(db, 'songs')
     const snapshots = await getDocs(songRef)
     snapshots.forEach((document) => {
+      console.log('>>>>>', document.data())
       this.songs.push({
         docID: document.id,
         ...document.data()
