@@ -41,7 +41,7 @@
 
 <script>
 import { db } from '@/includes/firebase'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, limit, query } from 'firebase/firestore'
 
 // Components
 import SongItem from '@/components/SongItem.vue'
@@ -61,8 +61,9 @@ export default {
   },
   methods: {
     async getSongs() {
-      const songRef = collection(db, 'songs')
-      const snapshots = await getDocs(songRef)
+      const songsRef = collection(db, 'songs')
+      const songsQueried = query(songsRef, limit(3))
+      const snapshots = await getDocs(songsQueried)
       snapshots.forEach((document) => {
         this.songs.push({
           docID: document.id,
@@ -75,7 +76,7 @@ export default {
       const { innerHeight } = window
       const bottomOfWindow = Math.round(scrollTop) + innerHeight > offsetHeight
       if (bottomOfWindow) {
-        console.log('Bottom!')
+        this.getSongs()
       }
     }
   },
