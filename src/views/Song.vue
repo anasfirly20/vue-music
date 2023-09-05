@@ -36,7 +36,7 @@
         >
           {{ alert_message }}
         </div>
-        <vee-form :validation-schema="schema" @submit="addComment">
+        <vee-form :validation-schema="schema" @submit="addComment" v-if="userLoggedIn">
           <div class="grid mb-4">
             <vee-field
               as="textarea"
@@ -84,6 +84,8 @@
 <script>
 import { doc, getDoc, collection, addDoc } from 'firebase/firestore'
 import { db, auth } from '@/includes/firebase'
+import { mapState } from 'pinia'
+import useUserStore from '@/stores/user'
 
 export default {
   name: 'Song',
@@ -99,6 +101,9 @@ export default {
       alert_message: 'Please wait! your comment is being submitted.'
     }
   },
+  computed: {
+    ...mapState(useUserStore, ['userLoggedIn'])
+  },
   methods: {
     async addComment(values, { resetForm }) {
       console.log('values >>', values)
@@ -106,7 +111,6 @@ export default {
       this.show_alert = true
       this.alert_variant = 'bg-blue-500'
       this.alert_message = 'Please wait! your comment is being submitted.'
-
       const comment = {
         content: values.comment,
         datePosted: new Date().toString(),
@@ -114,7 +118,6 @@ export default {
         name: auth.currentUser.displayName,
         uid: auth.currentUser.uid
       }
-
       try {
         await addDoc(collection(db, 'comments'), comment)
         this.in_submission = false
