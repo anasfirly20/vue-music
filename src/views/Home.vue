@@ -77,25 +77,14 @@ export default {
         return
       }
       this.pendingRequest = true
-
       const songsRef = collection(db, 'songs')
 
       let songsQueried
-      // // Query the first page of docs
       const first = query(songsRef, limit(this.maxPerPage))
       const documentSnapshots = await getDocs(first)
-      console.log(
-        'CHECK DYNAMIC ---->>',
-        documentSnapshots.docs[documentSnapshots.docs.length - 1].data().docID
-      )
-      console.log('SIZE >>', documentSnapshots.size)
-
-      const lastDoc = documentSnapshots.docs[documentSnapshots.docs.length - 1]
-      console.log('last', lastDoc)
-
+      const lastDoc = documentSnapshots.docs[documentSnapshots.docs.length - 1] // lastDoc have to be dynamic
       if (this.songs.length) {
         console.log('TRIGG IF')
-        // Get the last visible document
         songsQueried = query(
           songsRef,
           orderBy('docID'),
@@ -106,11 +95,8 @@ export default {
         console.log('TRIGG ELSE')
         songsQueried = query(songsRef, orderBy('docID'), limit(this.maxPerPage))
       }
-
       const snapshots = await getDocs(songsQueried)
       snapshots.forEach((document) => {
-        console.log('forEach TRIGGERED>>', document.data().modified_name)
-
         this.songs.push({
           docID: document.id,
           ...document.data()
