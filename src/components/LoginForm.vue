@@ -6,7 +6,7 @@
   >
     {{ login_alert_msg }}
   </div>
-  <vee-form :validation-schema="schema_login" @submit="login">
+  <vee-form :validation-schema="schema" @submit="login">
     <!-- Email -->
     <CustomInput :label="'Email'" :name="'email'" :placeholder="'Enter Email'" :type="'email'" />
     <!-- Password -->
@@ -36,7 +36,7 @@ export default {
   name: 'LoginForm',
   data() {
     return {
-      schema_login: {
+      schema: {
         email: 'required|email',
         password: 'required|min:6|max:100'
       },

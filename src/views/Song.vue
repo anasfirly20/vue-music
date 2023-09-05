@@ -29,15 +29,31 @@
         <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
       </div>
       <div class="p-6">
-        <form>
-          <textarea
-            class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded mb-4"
-            placeholder="Your comment here..."
-          ></textarea>
-          <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block">
+        <div
+          class="text-white text-center font-bold p-4 mb-4"
+          v-if="show_alert"
+          :class="alert_variant"
+        >
+          {{ alert_message }}
+        </div>
+        <vee-form :validation-schema="schema" @submit="addComment">
+          <div class="grid mb-4">
+            <vee-field
+              as="textarea"
+              class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+              placeholder="Your comment here..."
+              name="comment"
+            />
+            <ErrorMessage class="text-red-600" name="comment" />
+          </div>
+          <button
+            type="submit"
+            class="py-1.5 px-3 rounded text-white bg-green-600 block"
+            :disabled="in_submission"
+          >
             Submit
           </button>
-        </form>
+        </vee-form>
         <!-- Sort Comments -->
         <select
           class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
@@ -62,78 +78,54 @@
         laudantium.
       </p>
     </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">Elaine Dreyfuss</div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der doloremque
-        laudantium.
-      </p>
-    </li>
   </ul>
 </template>
 
 <script>
-import { doc, getDoc, getDocs } from 'firebase/firestore'
-import { db } from '@/includes/firebase'
+import { doc, getDoc, collection, addDoc } from 'firebase/firestore'
+import { db, auth } from '@/includes/firebase'
 
 export default {
   name: 'Song',
   data() {
     return {
-      song: {}
+      song: {},
+      schema: {
+        comment: 'required|min:3'
+      },
+      in_submission: false,
+      show_alert: false,
+      alert_variant: 'bg-blue-500',
+      alert_message: 'Please wait! your comment is being submitted.'
+    }
+  },
+  methods: {
+    async addComment(values, { resetForm }) {
+      console.log('values >>', values)
+      this.in_submission = true
+      this.show_alert = true
+      this.alert_variant = 'bg-blue-500'
+      this.alert_message = 'Please wait! your comment is being submitted.'
+
+      const comment = {
+        content: values.comment,
+        datePosted: new Date().toString(),
+        sid: this.$route.params.id,
+        name: auth.currentUser.displayName,
+        uid: auth.currentUser.uid
+      }
+
+      try {
+        await addDoc(collection(db, 'comments'), comment)
+        this.in_submission = false
+        this.alert_variant = 'bg-green-500'
+        this.alert_message = 'Comment added!'
+        resetForm()
+      } catch (error) {
+        this.in_submission = false
+        this.alert_variant = 'bg-red-500'
+        this.alert_message = 'Something went wrong, ty again later.'
+      }
     }
   },
   async created() {
