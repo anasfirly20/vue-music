@@ -10,6 +10,7 @@
       <button
         type="button"
         class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none"
+        @click.prevent="this.newSong(song)"
       >
         <i class="fas fa-play"></i>
       </button>
@@ -97,8 +98,11 @@ import {
   updateDoc
 } from 'firebase/firestore'
 import { db, auth } from '@/includes/firebase'
-import { mapState } from 'pinia'
+
+// Pinia
+import { mapState, mapActions } from 'pinia'
 import useUserStore from '@/stores/user'
+import usePlayerStore from '@/stores/player'
 
 export default {
   name: 'Song',
@@ -180,7 +184,8 @@ export default {
           docID: doc.id
         })
       })
-    }
+    },
+    ...mapActions(usePlayerStore, ['newSong'])
   },
   async created() {
     const songRef = doc(db, 'songs', this.$route.params.id)

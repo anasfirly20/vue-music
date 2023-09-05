@@ -26,13 +26,9 @@
         <!-- File Name -->
         <div class="font-bold text-sm space-x-2" :class="upload.text_class">
           <i :class="upload.icon"></i>
-          <a
-            v-if="upload.download_url"
-            :href="upload.download_url"
-            target="_blank"
-            rel="noopener noreferrer"
-            >{{ upload.name }}</a
-          >
+          <a v-if="upload.url" :href="upload.url" target="_blank" rel="noopener noreferrer">{{
+            upload.name
+          }}</a>
           <span v-else>{{ upload.name }}</span>
         </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
@@ -86,8 +82,7 @@ export default {
             name: file.name,
             variant: 'bg-blue-400',
             icon: 'fas fa-spinner fa-spin',
-            text_class: '',
-            download_url: ''
+            text_class: ''
           }) - 1
         task.on(
           'state_changed',
@@ -113,11 +108,10 @@ export default {
             this.uploads[uploadIndex].variant = 'bg-green-400'
             this.uploads[uploadIndex].icon = 'fas fa-check'
             this.uploads[uploadIndex].text_class = 'text-green-400'
-            getDownloadURL(task.snapshot.ref).then((downloadURL) => {
-              this.uploads[uploadIndex].download_url = downloadURL
-              console.log('File available at', downloadURL)
-              song.url = downloadURL
-            })
+
+            const songUrl = await getDownloadURL(task.snapshot.ref)
+            song.url = songUrl
+
             const songRef = await addDoc(collection(db, 'songs'), song)
             const songSnapRef = await getDoc(songRef)
             this.addSong(songSnapRef)

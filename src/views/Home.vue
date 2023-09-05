@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       songs: [],
-      maxPerPage: 6,
+      maxPerPage: 12,
       pendingRequest: false
     }
   },
@@ -70,7 +70,7 @@ export default {
       const songsRef = collection(db, 'songs')
 
       let songsQueried
-      const first = query(songsRef, limit(this.maxPerPage))
+      const first = query(songsRef)
       const documentSnapshots = await getDocs(first)
       const lastDoc = documentSnapshots.docs[documentSnapshots.docs.length - 1] // lastDoc have to be dynamic
       if (this.songs.length) {
@@ -83,7 +83,7 @@ export default {
         )
       } else {
         console.log('TRIGG ELSE')
-        songsQueried = query(songsRef, orderBy('docID'), limit(this.maxPerPage))
+        songsQueried = query(songsRef)
       }
       const snapshots = await getDocs(songsQueried)
       snapshots.forEach((document) => {
