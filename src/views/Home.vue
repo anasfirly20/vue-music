@@ -232,3 +232,30 @@
     </div>
   </section>
 </template>
+
+<script>
+import { db } from '@/includes/firebase'
+import { collection, getDocs } from 'firebase/firestore'
+
+export default {
+  name: 'Home',
+  data() {
+    return {
+      songs: []
+    }
+  },
+  async created() {
+    console.log('TRIGG')
+
+    const songRef = collection(db, 'songs')
+    const snapshots = await getDocs(songRef)
+
+    snapshots.forEach((document) => {
+      this.songs.push({
+        docID: document.id,
+        ...document.data()
+      })
+    })
+  }
+}
+</script>
