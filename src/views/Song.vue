@@ -25,7 +25,7 @@
     <div class="bg-white rounded border border-gray-200 relative flex flex-col">
       <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
         <!-- Comment Count -->
-        <span class="card-title">Comments (15)</span>
+        <span class="card-title">Comments ({{ song.comment_count }})</span>
         <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
       </div>
       <div class="p-6">
@@ -86,7 +86,16 @@
 </template>
 
 <script>
-import { doc, getDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore'
+import {
+  doc,
+  getDoc,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc
+} from 'firebase/firestore'
 import { db, auth } from '@/includes/firebase'
 import { mapState } from 'pinia'
 import useUserStore from '@/stores/user'
@@ -134,11 +143,21 @@ export default {
       }
       try {
         await addDoc(collection(db, 'comments'), comment)
+
+        // Called to update the comment list after adding new comment
         this.getComments()
+
         this.in_submission = false
         this.alert_variant = 'bg-green-500'
         this.alert_message = 'Comment added!'
         resetForm()
+
+        // Add comment count
+        this.song.comment_count += 1
+        const songsRef = doc(db, 'songs', this.$route.params.id)
+        await updateDoc(songsRef, {
+          comment_count: this.song.comment_count
+        })
       } catch (error) {
         this.in_submission = false
         this.alert_variant = 'bg-red-500'
