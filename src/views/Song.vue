@@ -124,6 +124,7 @@ export default {
       }
       try {
         await addDoc(collection(db, 'comments'), comment)
+        this.getComments()
         this.in_submission = false
         this.alert_variant = 'bg-green-500'
         this.alert_message = 'Comment added!'
@@ -160,7 +161,7 @@ export default {
       return
     }
     this.song = docSnap.data()
-    await this.getComments()
+    this.getComments()
   }
 }
 </script>
