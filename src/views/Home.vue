@@ -55,15 +55,32 @@ export default {
     }
   },
   async created() {
-    const songRef = collection(db, 'songs')
-    const snapshots = await getDocs(songRef)
-    snapshots.forEach((document) => {
-      console.log('>>>>>', document.data())
-      this.songs.push({
-        docID: document.id,
-        ...document.data()
+    this.getSongs()
+
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  methods: {
+    async getSongs() {
+      const songRef = collection(db, 'songs')
+      const snapshots = await getDocs(songRef)
+      snapshots.forEach((document) => {
+        this.songs.push({
+          docID: document.id,
+          ...document.data()
+        })
       })
-    })
+    },
+    handleScroll() {
+      const { scrollTop, offsetHeight } = document.documentElement
+      const { innerHeight } = window
+      const bottomOfWindow = Math.round(scrollTop) + innerHeight > offsetHeight
+      if (bottomOfWindow) {
+        console.log('Bottom!')
+      }
+    }
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>
