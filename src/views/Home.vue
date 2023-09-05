@@ -41,17 +41,7 @@
 
 <script>
 import { db } from '@/includes/firebase'
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  startAfter,
-  startAt
-} from 'firebase/firestore'
+import { collection, getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore'
 
 // Components
 import SongItem from '@/components/SongItem.vue'

@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Views
-import Home from '@/views/Home.vue'
-import About from '@/views/About.vue'
-import Manage from '@/views/Manage.vue'
+// Store
 import useUserStore from '@/stores/user'
+
+// Views
+const Home = () => import('@/views/Home.vue')
+const About = () => import('@/views/About.vue')
+const Manage = () => import('@/views/Manage.vue')
+const Song = () => import('@/views/Song.vue')
 
 const routes = [
   { name: 'home', path: '/', component: Home },
@@ -17,6 +20,7 @@ const routes = [
       requiresAuth: true
     }
   },
+  { name: 'song', path: '/song/:id', component: Song },
   { path: '/manage', redirect: { name: 'manage' } },
   { path: '/:catchAll(.*)*', redirect: { name: 'home' } }
 ]
@@ -27,6 +31,7 @@ const router = createRouter({
   linkExactActiveClass: 'text-yellow-500'
 })
 
+// Authentication
 router.beforeEach((to, from, next) => {
   if (!to.meta.requiresAuth) {
     next()
