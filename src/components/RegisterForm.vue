@@ -55,7 +55,9 @@
         name="tos"
         value="1"
       />
-      <label class="inline-block">Accept terms of service</label>
+      <i18n-t class="inline-block" keypath="register.accept" tag="label"
+        ><a href="#">{{ $t('register.tos') }}</a></i18n-t
+      >
     </div>
     <ErrorMessage class="text-red-600" name="tos" />
     <button
