@@ -68,7 +68,6 @@ export default {
       }
     },
     changeLocale() {
-      console.log('>>>>')
       this.$i18n.locale = this.$i18n.locale === 'fr' ? 'en' : 'fr'
     }
   }
