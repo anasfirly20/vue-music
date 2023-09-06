@@ -192,19 +192,22 @@ export default {
     },
     ...mapActions(usePlayerStore, ['newSong'])
   },
-  async created() {
-    const songRef = doc(db, 'songs', this.$route.params.id)
+  async beforeRouteEnter(to, from, next) {
+    const songRef = doc(db, 'songs', to.params.id)
     const docSnap = await getDoc(songRef)
-    if (!docSnap.exists()) {
-      this.$router.push({ name: 'home' })
-      return
-    }
 
-    const { sort } = this.$route.query
-    this.sort = sort === '1' || sort === '2' ? sort : '1'
+    next((vm) => {
+      if (!docSnap.exists()) {
+        vm.$router.push({ name: 'home' })
+        return
+      }
 
-    this.song = docSnap.data()
-    this.getComments()
+      const { sort } = vm.$route.query
+      vm.sort = sort === '1' || sort === '2' ? sort : '1'
+
+      vm.song = docSnap.data()
+      vm.getComments()
+    })
   },
   watch: {
     sort(newVal) {
