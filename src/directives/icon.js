@@ -1,5 +1,7 @@
 export default {
-  beforeMount(el) {
-    el.innerHTML += '<i class="fa fa-headphones-alt float-right text-green-400 text-xl"></i>'
+  beforeMount(el, binding) {
+    const iconClass = `fa fa-${binding.value} float-right text-green-400 text-xl`
+
+    el.innerHTML += `<i class="${iconClass}"></i>`
   }
 }
