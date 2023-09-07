@@ -40,7 +40,6 @@ describe('SongItem.vue', () => {
     })
 
     // expect(wrapper.attributes().id).toBe(`song-id-${song.docID}`)
-
     expect(wrapper.classes()).toContain(`song-id-${song.docID}`)
   })
 })
