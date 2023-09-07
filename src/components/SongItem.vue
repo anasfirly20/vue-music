@@ -7,8 +7,8 @@
       <router-link
         class="font-bold block text-gray-600"
         :to="{ name: 'song', params: { id: song.docID } }"
-        >{{ song.modified_name }}</router-link
-      >
+        >{{ song.modified_name }}
+      </router-link>
       <span class="text-gray-500 text-sm">{{ song.display_name }}</span>
       <small class="text-sm" v-if="song.genre"
         >Genre: <span class="text-slate-500">{{ song.genre }}</span></small
